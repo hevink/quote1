@@ -229,12 +229,18 @@ export default function EditQuotePage() {
                 }}
               />
               {editingItem ? (
-                <Button onClick={handleUpdateItem}>
+                <Button
+                  className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                  onClick={handleUpdateItem}
+                >
                   <Save className="w-4 h-4 mr-2" />
                   Update Item
                 </Button>
               ) : (
-                <Button onClick={handleAddItem}>
+                <Button
+                  onClick={handleAddItem}
+                  className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Item
                 </Button>

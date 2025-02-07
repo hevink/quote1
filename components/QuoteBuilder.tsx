@@ -97,7 +97,7 @@ export default function QuoteBuilder() {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Quote Management</CardTitle>
           <Link href="/quotes/new">
-            <Button>
+            <Button className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]">
               <Plus className="w-4 h-4 mr-2" /> Create New Quote
             </Button>
           </Link>
@@ -121,7 +121,9 @@ export default function QuoteBuilder() {
                     <TableCell>{quote.createdDate}</TableCell>
                     <TableCell>{quote.items.length}</TableCell>
                     <TableCell className="text-center">
-                      <Badge className="border border-orange-500 bg-orange-500/20 text-black hover:bg-orange-500/30">{quote.totalPrice.toFixed(2)}</Badge>
+                      <Badge className="border border-orange-500 bg-orange-500/20 text-black hover:bg-orange-500/30">
+                        {quote.totalPrice.toFixed(2)}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right space-x-2">
                       <Link href={`/quotes/${quote.quoteId}`}>

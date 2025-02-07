@@ -25,7 +25,7 @@ export default function ItemList({ items, onEdit, onDelete }: ItemListProps) {
             </button>
             <button
               onClick={() => onDelete(item.id)}
-              className="p-2 bg-white text-gray-600 hover:text-red-500 rounded-full shadow-md hover:shadow-lg transition-all duration-300"
+              className="group mt-8 flex h-10 items-center justify-center rounded-md border border-red-600 bg-gradient-to-b from-red-400 via-red-500 to-red-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
               aria-label="Delete item"
             >
               <Trash2 className="w-4 h-4" />
