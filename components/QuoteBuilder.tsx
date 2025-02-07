@@ -71,28 +71,6 @@ export default function QuoteBuilder() {
     toast({
       title: "Quote Deleted",
       description: "Use undo button to restore the quote",
-      action: (
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleUndo}
-            disabled={!canUndo}
-            className="flex items-center"
-          >
-            <Undo className="w-4 h-4 mr-2" /> Undo
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRedo}
-            disabled={!canRedo}
-            className="flex items-center"
-          >
-            <Redo className="w-4 h-4 mr-2" /> Redo
-          </Button>
-        </div>
-      ),
     });
   };
 
@@ -111,8 +89,8 @@ export default function QuoteBuilder() {
     await saveQuotes(newPresent);
 
     toast({
-      title: "Action Undone",
-      description: "The previous action has been undone",
+      title: "Action Undo",
+      description: "The previous action has been undo",
     });
   };
 
