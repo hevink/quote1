@@ -1,9 +1,10 @@
 # Live Demo
+
 [Quotation Management Tool](https://quotation-management-tool.vercel.app/)
 
 ## Dashboard UI
 
-![Home Screen](Public/dashboardui.png)
+![Home Screen](public/dashboardui.png)
 
 ## Edit Page UI
 
