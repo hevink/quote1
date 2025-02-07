@@ -1,0 +1,40 @@
+[
+  {
+    "quoteId": "Q67722",
+    "createdDate": "2025-02-07",
+    "totalPrice": 0,
+    "items": []
+  },
+  {
+    "quoteId": "Q67722",
+    "createdDate": "2025-02-07",
+    "totalPrice": 10,
+    "items": [
+      {
+        "id": "item1738916975802",
+        "name": "test",
+        "description": "test",
+        "price": 10
+      }
+    ]
+  },
+  {
+    "quoteId": "Q67722",
+    "createdDate": "2025-02-07",
+    "totalPrice": 98,
+    "items": [
+      {
+        "id": "item1738916975802",
+        "name": "test",
+        "description": "test",
+        "price": 10
+      },
+      {
+        "id": "item1738917001944",
+        "name": "qw",
+        "description": "aahsdg",
+        "price": 88
+      }
+    ]
+  }
+]
