@@ -15,10 +15,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "@/components/ui/use-toast";
 import { Trash2, Edit, Plus, Save, ArrowLeft, Receipt } from "lucide-react";
 import { Quote, QuoteItem } from "@/types/quote";
 import { getQuotes, saveQuotes } from "@/app/actions/quoteActions";
+import { useToast } from "@/hooks/use-toast";
 
 export default function EditQuotePage() {
   const router = useRouter();
@@ -32,6 +32,7 @@ export default function EditQuotePage() {
     description: "",
     price: 0,
   });
+  const { toast } = useToast();
 
   useEffect(() => {
     const loadQuote = async () => {
