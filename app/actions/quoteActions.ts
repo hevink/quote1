@@ -8,7 +8,6 @@ const dataFilePath = path.join(process.cwd(), "data", "quotes.json");
 
 export async function getQuotes(): Promise<Quote[]> {
   try {
-    // Ensure data directory exists
     const dataDir = path.join(process.cwd(), "data");
     try {
       await fs.access(dataDir);
@@ -16,12 +15,10 @@ export async function getQuotes(): Promise<Quote[]> {
       await fs.mkdir(dataDir);
     }
 
-    // Ensure quotes.json exists and is valid
     try {
       const jsonData = await fs.readFile(dataFilePath, "utf8");
       return JSON.parse(jsonData);
-    } catch (error) {
-      // If file doesn't exist or is invalid, create new file with empty array
+    } catch {
       await fs.writeFile(dataFilePath, JSON.stringify([]));
       return [];
     }
@@ -31,17 +28,8 @@ export async function getQuotes(): Promise<Quote[]> {
   }
 }
 
-export async function saveQuotes(quotes: Quote[]): Promise<boolean> {
+export async function saveQuotes(quotes: Quote[]) {
   try {
-    // Ensure data directory exists
-    const dataDir = path.join(process.cwd(), "data");
-    try {
-      await fs.access(dataDir);
-    } catch {
-      await fs.mkdir(dataDir);
-    }
-
-    // Save quotes to file
     await fs.writeFile(dataFilePath, JSON.stringify(quotes, null, 2));
     return true;
   } catch (error) {

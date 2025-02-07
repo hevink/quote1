@@ -1,4 +1,3 @@
-// @/types/quote.ts
 export interface QuoteItem {
   id: string;
   name: string;

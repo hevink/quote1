@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,10 +18,13 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { Trash2, Edit, Plus, Save, ArrowLeft, Receipt } from "lucide-react";
 import { Quote, QuoteItem } from "@/types/quote";
-import { getQuotes, saveQuotes } from "../../actions/quoteActions";
+import { getQuotes, saveQuotes } from "@/app/actions/quoteActions";
 
-export default function EditQuotePage({ params }: { params: { id: string } }) {
+export default function EditQuotePage() {
   const router = useRouter();
+  const params = useParams();
+  const quoteId = params?.id;
+
   const [quote, setQuote] = useState<Quote | null>(null);
   const [editingItem, setEditingItem] = useState<QuoteItem | null>(null);
   const [newItem, setNewItem] = useState<Partial<QuoteItem>>({
@@ -29,25 +33,24 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
     price: 0,
   });
 
-  console.log(params);
-
   useEffect(() => {
     const loadQuote = async () => {
       const quotes = await getQuotes();
-      const foundQuote = quotes.find((q) => q.quoteId === params.id);
-      if (foundQuote) {
-        setQuote(foundQuote);
-      } else if (params.id === "new") {
-        setQuote({
+      let foundQuote = quotes.find((q) => q.quoteId === quoteId);
+
+      if (!foundQuote) {
+        foundQuote = {
           quoteId: `Q${Date.now().toString().slice(-5)}`,
           createdDate: new Date().toISOString().split("T")[0],
           totalPrice: 0,
           items: [],
-        });
+        };
       }
+      setQuote(foundQuote);
     };
+
     loadQuote();
-  }, [params.id]);
+  }, [quoteId]);
 
   const updateQuoteTotalPrice = (updatedQuote: Quote) => {
     return {
@@ -56,32 +59,44 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
     };
   };
 
-  const handleSaveQuote = async () => {
+  const handleSaveQuote = async (updatedQuote?: Quote) => {
     if (!quote) return;
 
-    const quotes = await getQuotes();
-    const updatedQuotes =
-      params.id === "new"
-        ? [...quotes, quote]
-        : quotes.map((q) => (q.quoteId === quote.quoteId ? quote : q));
+    let finalQuote = updatedQuote || quote;
 
-    const success = await saveQuotes(updatedQuotes);
+    finalQuote.totalPrice = finalQuote.items.reduce(
+      (sum, item) => sum + item.price,
+      0
+    );
+
+    const quotes = await getQuotes();
+    const existingQuoteIndex = quotes.findIndex(
+      (q) => q.quoteId === finalQuote.quoteId
+    );
+
+    if (existingQuoteIndex !== -1) {
+      quotes[existingQuoteIndex] = finalQuote;
+    } else {
+      quotes.push(finalQuote);
+    }
+
+    const success = await saveQuotes(quotes);
 
     if (success) {
-      toast({
-        title: "Success",
-        description: "Quote saved successfully",
-      });
+      toast({ title: "Success", description: "Quote saved successfully" });
     }
   };
 
   const handleAddItem = async () => {
-    if (!quote) return;
-
-    if (!newItem.name || !newItem.description || newItem.price === undefined) {
+    if (
+      !quote ||
+      !newItem.name ||
+      !newItem.description ||
+      newItem.price === undefined
+    ) {
       toast({
         title: "Validation Error",
-        description: "Please fill in all fields",
+        description: "Fill in all fields",
         variant: "destructive",
       });
       return;
@@ -94,17 +109,13 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
       price: newItem.price,
     };
 
-    console.log(newQuoteItem, "newQuoteItem");
-
     const updatedQuote = updateQuoteTotalPrice({
       ...quote,
       items: [...quote.items, newQuoteItem],
     });
 
-    console.log(updatedQuote, "updatedQuote");
-
     setQuote(updatedQuote);
-    await handleSaveQuote();
+    await handleSaveQuote(updatedQuote);
     setNewItem({ name: "", description: "", price: 0 });
   };
 
@@ -119,7 +130,7 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
     });
 
     setQuote(updatedQuote);
-    await handleSaveQuote();
+    await handleSaveQuote(updatedQuote);
     setEditingItem(null);
   };
 
@@ -132,7 +143,7 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
     });
 
     setQuote(updatedQuote);
-    await handleSaveQuote();
+    await handleSaveQuote(updatedQuote);
   };
 
   if (!quote) return <div>Loading...</div>;
@@ -146,16 +157,14 @@ export default function EditQuotePage({ params }: { params: { id: string } }) {
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <CardTitle>
-              {params.id === "new"
-                ? "Create New Quote"
-                : `Edit Quote ${quote.quoteId}`}
+              {quoteId ? `Edit Quote ${quote.quoteId}` : "Create New Quote"}
             </CardTitle>
           </div>
           <div className="text-sm text-muted-foreground">
             Total: ${quote.totalPrice.toFixed(2)}
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">Quote ID</label>
