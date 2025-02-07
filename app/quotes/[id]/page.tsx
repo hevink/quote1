@@ -91,8 +91,8 @@ export default function EditQuotePage() {
   const handleAddItem = async () => {
     if (
       !quote ||
-      !newItem.name ||
-      !newItem.description ||
+      !newItem.name?.trim() ||
+      !newItem.description?.trim() ||
       newItem.price === undefined
     ) {
       toast({
@@ -103,11 +103,27 @@ export default function EditQuotePage() {
       return;
     }
 
+    // Check for duplicate item names
+    const isDuplicate = quote.items.some(
+      (item) =>
+        item.name.trim().toLowerCase() ===
+        (newItem.name?.trim().toLowerCase() ?? "")
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: "Duplicate Item",
+        description: "An item with this name already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newQuoteItem: QuoteItem = {
       id: `item${Date.now()}`,
-      name: newItem.name,
-      description: newItem.description,
-      price: newItem.price,
+      name: newItem.name ?? "", // Provide default empty string if undefined
+      description: newItem.description ?? "",
+      price: newItem.price ?? 0, // Default to 0 if undefined
     };
 
     const updatedQuote = updateQuoteTotalPrice({
@@ -122,6 +138,22 @@ export default function EditQuotePage() {
 
   const handleUpdateItem = async () => {
     if (!editingItem || !quote) return;
+
+    // Check for duplicate item names (excluding the currently editing item)
+    const isDuplicate = quote.items.some(
+      (item) =>
+        item.id !== editingItem.id &&
+        item.name.trim().toLowerCase() === editingItem.name.trim().toLowerCase()
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: "Duplicate Item",
+        description: "An item with this name already exists.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const updatedQuote = updateQuoteTotalPrice({
       ...quote,
@@ -157,7 +189,7 @@ export default function EditQuotePage() {
             <Button variant="ghost" onClick={() => router.push("/")}>
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <CardTitle>
+            <CardTitle className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
               {quoteId !== "new"
                 ? `Edit Quote ${quote.quoteId}`
                 : "Create New Quote"}
@@ -223,6 +255,7 @@ export default function EditQuotePage() {
                 <Input
                   type="number"
                   placeholder="Price"
+                  min="0"
                   value={editingItem?.price ?? newItem.price}
                   onChange={(e) => {
                     const value = parseFloat(e.target.value);
