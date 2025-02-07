@@ -1,4 +1,5 @@
-"use client";;
+"use client";
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Edit, Trash2, Undo, Receipt } from "lucide-react";
+import { Plus, Edit, Trash2, Undo, Redo, Receipt } from "lucide-react";
 import { Quote } from "@/types/quote";
 import { getQuotes, saveQuotes } from "@/app/actions/quoteActions";
 import Link from "next/link";
@@ -19,11 +20,23 @@ import { Badge } from "./ui/badge";
 import { useRouter } from "next/navigation";
 import { Hash, Calendar, List, DollarSign } from "lucide-react";
 
+interface HistoryState {
+  past: Quote[][];
+  present: Quote[];
+  future: Quote[][];
+}
+
 export default function QuoteBuilder() {
-  const [quotes, setQuotes] = useState<Quote[]>([]);
-  const [deletedQuote, setDeletedQuote] = useState<Quote | null>(null);
-  const [undoTimer, setUndoTimer] = useState<NodeJS.Timeout | null>(null);
+  const [history, setHistory] = useState<HistoryState>({
+    past: [],
+    present: [],
+    future: [],
+  });
   const { toast } = useToast();
+  const router = useRouter();
+
+  const canUndo = history.past.length > 0;
+  const canRedo = history.future.length > 0;
 
   useEffect(() => {
     loadQuotes();
@@ -31,82 +44,155 @@ export default function QuoteBuilder() {
 
   const loadQuotes = async () => {
     const loadedQuotes = await getQuotes();
-    setQuotes(loadedQuotes);
+    setHistory({
+      past: [],
+      present: loadedQuotes,
+      future: [],
+    });
+  };
+
+  // Helper function to save state to history
+  const saveToHistory = async (newPresent: Quote[]) => {
+    setHistory((prev) => ({
+      past: [...prev.past, prev.present],
+      present: newPresent,
+      future: [],
+    }));
+    await saveQuotes(newPresent);
   };
 
   const handleDelete = async (quoteToDelete: Quote) => {
-    setDeletedQuote(quoteToDelete); // Save current state for undo
-
-    const updatedQuotes = quotes.filter(
+    const updatedQuotes = history.present.filter(
       (q) => q.quoteId !== quoteToDelete.quoteId
     );
-    setQuotes(updatedQuotes);
-    await saveQuotes(updatedQuotes);
 
-    // Show toast with undo option
+    await saveToHistory(updatedQuotes);
+
     toast({
       title: "Quote Deleted",
-      description: "Quote will be permanently deleted in 5 seconds",
+      description: "Use undo button to restore the quote",
       action: (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={handleUndo}
-          className="flex items-center"
-        >
-          <Undo className="w-4 h-4 mr-2" /> Undo
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleUndo}
+            disabled={!canUndo}
+            className="flex items-center"
+          >
+            <Undo className="w-4 h-4 mr-2" /> Undo
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRedo}
+            disabled={!canRedo}
+            className="flex items-center"
+          >
+            <Redo className="w-4 h-4 mr-2" /> Redo
+          </Button>
+        </div>
       ),
-      duration: 5000,
     });
-
-    if (undoTimer) clearTimeout(undoTimer);
-
-    // Start a timer to clear deletedQuote after 5 seconds
-    const timer = setTimeout(() => setDeletedQuote(null), 5000);
-    setUndoTimer(timer);
   };
 
   const handleUndo = async () => {
-    if (!deletedQuote) return;
+    if (!canUndo) return;
 
-    if (undoTimer) clearTimeout(undoTimer);
+    const newPresent = history.past[history.past.length - 1];
+    const newPast = history.past.slice(0, -1);
 
-    const restoredQuotes = [...quotes, deletedQuote];
-    setQuotes(restoredQuotes);
-    await saveQuotes(restoredQuotes);
+    setHistory({
+      past: newPast,
+      present: newPresent,
+      future: [history.present, ...history.future],
+    });
 
-    setDeletedQuote(null);
-    setUndoTimer(null);
+    await saveQuotes(newPresent);
 
     toast({
-      title: "Quote Restored",
-      description: "The quote has been restored successfully",
+      title: "Action Undone",
+      description: "The previous action has been undone",
     });
   };
 
+  const handleRedo = async () => {
+    if (!canRedo) return;
+
+    const newPresent = history.future[0];
+    const newFuture = history.future.slice(1);
+
+    setHistory({
+      past: [...history.past, history.present],
+      present: newPresent,
+      future: newFuture,
+    });
+
+    await saveQuotes(newPresent);
+
+    toast({
+      title: "Action Redone",
+      description: "The action has been redone",
+    });
+  };
+
+  // Add keyboard shortcuts for undo/redo
   useEffect(() => {
-    return () => {
-      if (undoTimer) clearTimeout(undoTimer);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "z") {
+        if (e.shiftKey) {
+          e.preventDefault();
+          handleRedo();
+        } else {
+          e.preventDefault();
+          handleUndo();
+        }
+      }
     };
-  }, [undoTimer]);
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [history]);
 
   return (
     <div className="container mx-auto p-4 space-y-6">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>
-            <p className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
-              Quote Management
-            </p>
-          </CardTitle>
+          <div className="flex items-center gap-4">
+            <CardTitle>
+              <p className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+                Quote Management
+              </p>
+            </CardTitle>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleUndo}
+                disabled={!canUndo}
+                className="flex items-center"
+              >
+                <Undo className="w-4 h-4 mr-2" /> Undo
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRedo}
+                disabled={!canRedo}
+                className="flex items-center"
+              >
+                <Redo className="w-4 h-4 mr-2" /> Redo
+              </Button>
+            </div>
+          </div>
           <Link href="/quotes/new">
             <Button className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]">
               <Plus className="w-4 h-4 mr-2" /> Create New Quote
             </Button>
           </Link>
         </CardHeader>
-        {quotes[0] ? (
+
+        {history.present.length > 0 ? (
           <CardContent>
             <Table>
               <TableHeader>
@@ -135,55 +221,47 @@ export default function QuoteBuilder() {
                       Total Price
                     </div>
                   </TableHead>
-                  <TableHead className="text-right">
-                    <div className="flex justify-center gap-1">
-                      Actions
-                    </div>
-                  </TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {quotes.map((quote) => {
-                  const router = useRouter();
-
-                  return (
-                    <TableRow
-                      key={quote.quoteId}
-                      onClick={() => router.push(`/quotes/${quote.quoteId}`)}
-                      className="cursor-pointer hover:bg-gray-100 transition-colors"
-                    >
-                      <TableCell>{quote.quoteId}</TableCell>
-                      <TableCell>{quote.createdDate}</TableCell>
-                      <TableCell>{quote.items.length}</TableCell>
-                      <TableCell className="text-center">
-                        <Badge className="border border-orange-500 bg-orange-500/20 text-black hover:bg-orange-500/30">
-                          {quote.totalPrice.toFixed(2)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right space-x-2">
-                        <Link href={`/quotes/${quote.quoteId}`}>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Edit className="w-4 h-4 mr-2" /> Edit
-                          </Button>
-                        </Link>
+                {history.present.map((quote) => (
+                  <TableRow
+                    key={quote.quoteId}
+                    onClick={() => router.push(`/quotes/${quote.quoteId}`)}
+                    className="cursor-pointer hover:bg-gray-100 transition-colors"
+                  >
+                    <TableCell>{quote.quoteId}</TableCell>
+                    <TableCell>{quote.createdDate}</TableCell>
+                    <TableCell>{quote.items.length}</TableCell>
+                    <TableCell className="text-right">
+                      <Badge className="border border-orange-500 bg-orange-500/20 text-black hover:bg-orange-500/30">
+                        ${quote.totalPrice.toFixed(2)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Link href={`/quotes/${quote.quoteId}`}>
                         <Button
-                          variant="destructive"
+                          variant="outline"
                           size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent redirect
-                            handleDelete(quote);
-                          }}
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Trash2 className="w-4 h-4 mr-2" /> Delete
+                          <Edit className="w-4 h-4 mr-2" /> Edit
                         </Button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                      </Link>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(quote);
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" /> Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -193,9 +271,11 @@ export default function QuoteBuilder() {
               <Receipt className="w-8 h-8 text-orange-500" />
             </div>
             <h3 className="text-lg font-semibold text-gray-800 mb-2">
-              No Items Added
+              No Quotes Available
             </h3>
-            <p className="text-gray-500">Start by adding items to your quote</p>
+            <p className="text-gray-500">
+              Create your first quote to get started
+            </p>
           </div>
         )}
       </Card>
