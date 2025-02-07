@@ -31,6 +31,17 @@ export default function QuoteBuilder() {
 
   // Handler for updating an existing item
   const updateItem = (updatedItem: Item) => {
+    // Check for duplicate item names
+    if (
+      items.some(
+        (existingItem) =>
+          existingItem.name.toLowerCase() === updatedItem.name.toLowerCase()
+      )
+    ) {
+      alert("An item with this name already exists.");
+      return;
+    }
+
     setItems(
       items.map((item) => (item.id === updatedItem.id ? updatedItem : item))
     );
