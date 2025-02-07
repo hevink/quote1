@@ -186,11 +186,24 @@ export default function EditQuotePage() {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Quote Items</CardTitle>
-        </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-4 pt-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p>Quote Items</p>
+              </div>
+              {editingItem ? (
+                <Button onClick={handleUpdateItem}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Update Item
+                </Button>
+              ) : (
+                <Button onClick={handleAddItem}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Item
+                </Button>
+              )}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Input
                 placeholder="Item Name"
@@ -201,7 +214,7 @@ export default function EditQuotePage() {
                     : setNewItem({ ...newItem, name: e.target.value })
                 }
               />
-              <Textarea
+              <Input
                 placeholder="Description"
                 className="md:col-span-2"
                 value={editingItem?.description ?? newItem.description}
@@ -225,19 +238,6 @@ export default function EditQuotePage() {
                     : setNewItem({ ...newItem, price: value });
                 }}
               />
-            </div>
-            <div className="flex justify-end">
-              {editingItem ? (
-                <Button onClick={handleUpdateItem}>
-                  <Save className="w-4 h-4 mr-2" />
-                  Update Item
-                </Button>
-              ) : (
-                <Button onClick={handleAddItem}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Item
-                </Button>
-              )}
             </div>
           </div>
 
