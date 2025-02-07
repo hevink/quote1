@@ -172,6 +172,7 @@ export default function QuoteBuilder() {
 
         {history.present.length > 0 ? (
           <CardContent>
+            {console.log(history.present)}
             <Table>
               <TableHeader>
                 <TableRow>
@@ -245,6 +246,8 @@ export default function QuoteBuilder() {
           </CardContent>
         ) : (
           <div className="text-center py-12">
+            {console.log(0)}
+
             <div className="bg-orange-50 rounded-full w-16 h-16 mx-auto flex items-center justify-center mb-4">
               <Receipt className="w-8 h-8 text-orange-500" />
             </div>
