@@ -132,6 +132,8 @@ export default function QuoteBuilder() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [history]);
 
+  console.log(history.present);
+
   return (
     <div className="container mx-auto p-4 space-y-6">
       <Card>
