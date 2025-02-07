@@ -158,7 +158,9 @@ export default function EditQuotePage() {
               <ArrowLeft className="w-4 h-4" />
             </Button>
             <CardTitle>
-              {quoteId ? `Edit Quote ${quote.quoteId}` : "Create New Quote"}
+              {quoteId !== "new"
+                ? `Edit Quote ${quote.quoteId}`
+                : "Create New Quote"}
             </CardTitle>
           </div>
           <div className="text-sm text-muted-foreground">
