@@ -157,14 +157,14 @@ export default function QuoteBuilder() {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-4">
+        <CardHeader className="block md:flex flex-row items-center justify-between">
+          <div className="block md:flex items-center gap-4">
             <CardTitle>
-              <p className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">
+              <p className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent text-center">
                 Quote Management
               </p>
             </CardTitle>
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-center md:justify-start">
               <Button
                 variant="outline"
                 size="sm"
@@ -186,7 +186,7 @@ export default function QuoteBuilder() {
             </div>
           </div>
           <Link href="/quotes/new">
-            <Button className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]">
+            <Button className="group w-full flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]">
               <Plus className="w-4 h-4 mr-2" /> Create New Quote
             </Button>
           </Link>

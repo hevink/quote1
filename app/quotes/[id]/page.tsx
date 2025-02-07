@@ -163,7 +163,7 @@ export default function EditQuotePage() {
                 : "Create New Quote"}
             </CardTitle>
           </div>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-lg font-semibold text-gray-800">
             Total: ${quote.totalPrice.toFixed(2)}
           </div>
         </CardHeader>
@@ -214,9 +214,9 @@ export default function EditQuotePage() {
                   onChange={(e) =>
                     editingItem
                       ? setEditingItem({
-                          ...editingItem,
-                          description: e.target.value,
-                        })
+                        ...editingItem,
+                        description: e.target.value,
+                      })
                       : setNewItem({ ...newItem, description: e.target.value })
                   }
                 />
