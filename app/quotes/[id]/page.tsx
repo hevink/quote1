@@ -121,9 +121,9 @@ export default function EditQuotePage() {
 
     const newQuoteItem: QuoteItem = {
       id: `item${Date.now()}`,
-      name: newItem.name ?? "", // Provide default empty string if undefined
-      description: newItem.description ?? "",
-      price: newItem.price ?? 0, // Default to 0 if undefined
+      name: newItem.name,
+      description: newItem.description,
+      price: newItem.price,
     };
 
     const updatedQuote = updateQuoteTotalPrice({
