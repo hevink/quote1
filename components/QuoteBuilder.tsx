@@ -143,7 +143,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { toast } from "@/components/ui/use-toast";
-import { Plus, Edit, Trash2, Undo } from "lucide-react";
+import { Plus, Edit, Trash2, Undo, Receipt } from "lucide-react";
 import { Quote } from "@/types/quote";
 import { getQuotes, saveQuotes } from "@/app/actions/quoteActions";
 import Link from "next/link";
@@ -244,47 +244,59 @@ export default function QuoteBuilder() {
             </Button>
           </Link>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Quote ID</TableHead>
-                <TableHead>Created Date</TableHead>
-                <TableHead>Items Count</TableHead>
-                <TableHead className="text-right">Total Price</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {quotes.map((quote) => (
-                <TableRow key={quote.quoteId}>
-                  <TableCell>{quote.quoteId}</TableCell>
-                  <TableCell>{quote.createdDate}</TableCell>
-                  <TableCell>{quote.items.length}</TableCell>
-                  <TableCell className="text-right">
-                    ${quote.totalPrice.toFixed(2)}
-                  </TableCell>
-                  <TableCell className="text-right space-x-2">
-                    <Link href={`/quotes/${quote.quoteId}`}>
-                      <Button variant="outline" size="sm">
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDelete(quote)}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </Button>
-                  </TableCell>
+        {quotes[0] ? (
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Quote ID</TableHead>
+                  <TableHead>Created Date</TableHead>
+                  <TableHead>Items Count</TableHead>
+                  <TableHead className="text-right">Total Price</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
+              </TableHeader>
+              <TableBody>
+                {quotes.map((quote) => (
+                  <TableRow key={quote.quoteId}>
+                    <TableCell>{quote.quoteId}</TableCell>
+                    <TableCell>{quote.createdDate}</TableCell>
+                    <TableCell>{quote.items.length}</TableCell>
+                    <TableCell className="text-right">
+                      ${quote.totalPrice.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Link href={`/quotes/${quote.quoteId}`}>
+                        <Button variant="outline" size="sm">
+                          <Edit className="w-4 h-4 mr-2" />
+                          Edit
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDelete(quote)}
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        ) : (
+          <div className="text-center py-12">
+            <div className="bg-orange-50 rounded-full w-16 h-16 mx-auto flex items-center justify-center mb-4">
+              <Receipt className="w-8 h-8 text-orange-500" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              No Items Added
+            </h3>
+            <p className="text-gray-500">Start by adding items to your quote</p>
+          </div>
+        )}
       </Card>
     </div>
   );
