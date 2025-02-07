@@ -4,7 +4,7 @@ import { useState } from "react";
 import ItemForm from "./ItemForm";
 import ItemList from "./ItemList";
 import type { Item } from "@/types";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Receipt } from "lucide-react";
 import Modal from "./Modal";
 
 export default function QuoteBuilder() {
@@ -69,7 +69,7 @@ export default function QuoteBuilder() {
   const totalCost = items.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 min-h-screen shadow-xl p-4 sm:p-6 md:p-8">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-semibold text-gray-800">Quote Items</h2>
         <button
@@ -80,7 +80,19 @@ export default function QuoteBuilder() {
           Add Item
         </button>
       </div>
-      <ItemList items={items} onEdit={openEditModal} onDelete={deleteItem} />
+      {items[0] ? (
+        <ItemList items={items} onEdit={openEditModal} onDelete={deleteItem} />
+      ) : (
+        <div className="text-center py-12">
+          <div className="bg-orange-50 rounded-full w-16 h-16 mx-auto flex items-center justify-center mb-4">
+            <Receipt className="w-8 h-8 text-blue-500" />
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            No Items Added
+          </h3>
+          <p className="text-gray-500">Start by adding items to your quote</p>
+        </div>
+      )}
       <div className="text-3xl font-bold text-gray-800 text-right">
         Total Cost: ${totalCost.toFixed(2)}
       </div>
