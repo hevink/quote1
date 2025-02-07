@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ItemForm from "./ItemForm";
 import ItemList from "./ItemList";
 import type { Item } from "@/types";
@@ -11,10 +11,26 @@ export default function QuoteBuilder() {
   const [items, setItems] = useState<Item[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [isMounted, setIsMounted] = useState(false); // Fix hydration issue
+
+  // Load items from localStorage on first mount
+  useEffect(() => {
+    const storedItems = localStorage.getItem("quoteItems");
+    if (storedItems) {
+      setItems(JSON.parse(storedItems));
+    }
+    setIsMounted(true); // Ensures hydration is complete
+  }, []);
+
+  // Save items to localStorage when items change (only if mounted)
+  useEffect(() => {
+    if (isMounted) {
+      localStorage.setItem("quoteItems", JSON.stringify(items));
+    }
+  }, [items, isMounted]);
 
   // Handler for adding a new item
   const addItem = (item: Item) => {
-    // Check for duplicate item names
     if (
       items.some(
         (existingItem) =>
@@ -25,16 +41,17 @@ export default function QuoteBuilder() {
       return;
     }
 
-    setItems([...items, { ...item, id: Date.now().toString() }]);
+    const newItems = [...items, { ...item, id: Date.now().toString() }];
+    setItems(newItems);
     closeModal();
   };
 
   // Handler for updating an existing item
   const updateItem = (updatedItem: Item) => {
-    // Check for duplicate item names
     if (
       items.some(
         (existingItem) =>
+          existingItem.id !== updatedItem.id &&
           existingItem.name.toLowerCase() === updatedItem.name.toLowerCase()
       )
     ) {
@@ -42,15 +59,17 @@ export default function QuoteBuilder() {
       return;
     }
 
-    setItems(
-      items.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+    const updatedItems = items.map((item) =>
+      item.id === updatedItem.id ? updatedItem : item
     );
+    setItems(updatedItems);
     closeModal();
   };
 
   // Handler for deleting an item
   const deleteItem = (id: string) => {
-    setItems(items.filter((item) => item.id !== id));
+    const filteredItems = items.filter((item) => item.id !== id);
+    setItems(filteredItems);
   };
 
   // Handler for opening the edit modal
