@@ -8,7 +8,7 @@
 
 ## Edit Page UI
 
-![Home Screen](public/editui.png)
+![Home Screen](public/editui.PNG)
 
 # Quotation Management Tool Features
 
