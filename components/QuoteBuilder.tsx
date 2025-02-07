@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import ItemForm from "./ItemForm";
 import ItemList from "./ItemList";
 import type { Item } from "@/types";
@@ -8,6 +9,7 @@ import { PlusCircle, Receipt } from "lucide-react";
 import Modal from "./Modal";
 
 export default function QuoteBuilder() {
+  const router = useRouter();
   const [items, setItems] = useState<Item[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Item | null>(null);
@@ -92,7 +94,8 @@ export default function QuoteBuilder() {
       <div className="flex justify-between items-center">
         <h2 className="text-3xl font-semibold text-gray-800">Quote Items</h2>
         <button
-          onClick={() => setIsModalOpen(true)}
+          // onClick={() => setIsModalOpen(true)}
+          onClick={() => router.push("/add-quote")}
           className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-300 shadow-md"
         >
           <PlusCircle className="w-5 h-5 mr-2" />
