@@ -121,7 +121,7 @@ export default function QuoteBuilder() {
                     <TableCell>{quote.createdDate}</TableCell>
                     <TableCell>{quote.items.length}</TableCell>
                     <TableCell className="text-center">
-                      <Badge className="border border-green-500 bg-green-500/20 text-black hover:bg-green-500/30">{quote.totalPrice.toFixed(2)}</Badge>
+                      <Badge className="border border-orange-500 bg-orange-500/20 text-black hover:bg-orange-500/30">{quote.totalPrice.toFixed(2)}</Badge>
                     </TableCell>
                     <TableCell className="text-right space-x-2">
                       <Link href={`/quotes/${quote.quoteId}`}>

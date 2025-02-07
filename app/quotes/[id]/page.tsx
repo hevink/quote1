@@ -193,19 +193,8 @@ export default function EditQuotePage() {
               <div>
                 <p>Quote Items</p>
               </div>
-              {editingItem ? (
-                <Button onClick={handleUpdateItem}>
-                  <Save className="w-4 h-4 mr-2" />
-                  Update Item
-                </Button>
-              ) : (
-                <Button onClick={handleAddItem}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Item
-                </Button>
-              )}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="flex gap-4">
               <Input
                 placeholder="Item Name"
                 value={editingItem?.name ?? newItem.name}
@@ -239,6 +228,17 @@ export default function EditQuotePage() {
                     : setNewItem({ ...newItem, price: value });
                 }}
               />
+              {editingItem ? (
+                <Button onClick={handleUpdateItem}>
+                  <Save className="w-4 h-4 mr-2" />
+                  Update Item
+                </Button>
+              ) : (
+                <Button onClick={handleAddItem}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Item
+                </Button>
+              )}
             </div>
           </div>
 
