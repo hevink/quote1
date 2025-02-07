@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { FileText, Info, DollarSign, MoreVertical } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -194,58 +194,62 @@ export default function EditQuotePage() {
                 <p>Quote Items</p>
               </div>
             </div>
-            <div className="flex gap-4">
-              <Input
-                placeholder="Item Name"
-                value={editingItem?.name ?? newItem.name}
-                onChange={(e) =>
-                  editingItem
-                    ? setEditingItem({ ...editingItem, name: e.target.value })
-                    : setNewItem({ ...newItem, name: e.target.value })
-                }
-              />
-              <Input
-                placeholder="Description"
-                className="md:col-span-2"
-                value={editingItem?.description ?? newItem.description}
-                onChange={(e) =>
-                  editingItem
-                    ? setEditingItem({
-                        ...editingItem,
-                        description: e.target.value,
-                      })
-                    : setNewItem({ ...newItem, description: e.target.value })
-                }
-              />
-              <Input
-                type="number"
-                placeholder="Price"
-                value={editingItem?.price ?? newItem.price}
-                onChange={(e) => {
-                  const value = parseFloat(e.target.value);
-                  editingItem
-                    ? setEditingItem({ ...editingItem, price: value })
-                    : setNewItem({ ...newItem, price: value });
-                }}
-              />
-              {editingItem ? (
-                <Button
-                  className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-                  onClick={handleUpdateItem}
-                >
-                  <Save className="w-4 h-4 mr-2" />
-                  Update Item
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleAddItem}
-                  className="group mt-8 flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Item
-                </Button>
-              )}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Input
+                  placeholder="Item Name"
+                  value={editingItem?.name ?? newItem.name}
+                  onChange={(e) =>
+                    editingItem
+                      ? setEditingItem({ ...editingItem, name: e.target.value })
+                      : setNewItem({ ...newItem, name: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Description"
+                  className="md:col-span-2"
+                  value={editingItem?.description ?? newItem.description}
+                  onChange={(e) =>
+                    editingItem
+                      ? setEditingItem({
+                          ...editingItem,
+                          description: e.target.value,
+                        })
+                      : setNewItem({ ...newItem, description: e.target.value })
+                  }
+                />
+                <Input
+                  type="number"
+                  placeholder="Price"
+                  value={editingItem?.price ?? newItem.price}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    editingItem
+                      ? setEditingItem({ ...editingItem, price: value })
+                      : setNewItem({ ...newItem, price: value });
+                  }}
+                />
+              </div>
+              <div className="flex justify-end">
+                {editingItem ? (
+                  <Button
+                    className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                    onClick={handleUpdateItem}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Update Item
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleAddItem}
+                    className="group flex h-10 items-center justify-center rounded-md border border-orange-600 bg-gradient-to-b from-orange-400 via-orange-500 to-orange-600 px-4 text-neutral-50 shadow-[inset_0_1px_0px_0px_#fdba74] active:[box-shadow:none]"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Item
+                  </Button>
+                )}
+              </div>
+            </>
           </div>
 
           <div className="mt-6">
@@ -253,10 +257,30 @@ export default function EditQuotePage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead className="text-right">Price</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>
+                      <div className="flex items-center gap-1">
+                        <FileText className="w-4 h-4" />
+                        Name
+                      </div>
+                    </TableHead>
+                    <TableHead>
+                      <div className="flex items-center gap-1">
+                        <Info className="w-4 h-4" />
+                        Description
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <DollarSign className="w-4 h-4" />
+                        Price
+                      </div>
+                    </TableHead>
+                    <TableHead className="text-center">
+                      <div className="flex items-center justify-end gap-1">
+                        <MoreVertical className="w-4 h-4" />
+                        Actions
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
