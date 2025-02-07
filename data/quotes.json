@@ -1,84 +1,14 @@
 [
   {
-    "quoteId": "Q89187",
+    "quoteId": "Q89266",
     "createdDate": "2025-02-07",
-    "totalPrice": 347,
+    "totalPrice": 100,
     "items": [
       {
-        "id": "item1738925865701",
-        "name": "High-Gloss Finish Paint",
-        "description": "High-Gloss Finish Paint 123",
-        "price": 23
-      },
-      {
-        "id": "item1738925874909",
-        "name": "Eco-Friendly Distemper",
-        "description": "Eco-Friendly Distemper",
-        "price": 324
-      }
-    ]
-  },
-  {
-    "quoteId": "Q80643",
-    "createdDate": "2025-02-07",
-    "totalPrice": 324,
-    "items": [
-      {
-        "id": "item1738925888661",
-        "name": "Anti-Stain Kitchen Paint",
-        "description": "Anti-Stain Kitchen Paint",
-        "price": 324
-      }
-    ]
-  },
-  {
-    "quoteId": "Q95711",
-    "createdDate": "2025-02-07",
-    "totalPrice": 342,
-    "items": [
-      {
-        "id": "item1738925899637",
-        "name": "Fast-Drying Spray Paint",
-        "description": "Fast-Drying Spray Paint",
-        "price": 342
-      }
-    ]
-  },
-  {
-    "quoteId": "Q04551",
-    "createdDate": "2025-02-07",
-    "totalPrice": 1212,
-    "items": [
-      {
-        "id": "item1738925912629",
-        "name": "Wood Finish Varnish",
-        "description": "Wood Finish Varnish",
-        "price": 435
-      },
-      {
-        "id": "item1738925919445",
-        "name": "Wood Finish Varnish",
-        "description": "Wood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish Varnish",
-        "price": 345
-      },
-      {
-        "id": "item1738925926261",
-        "name": "Wood Finish Varnish",
-        "description": "Wood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish VarnishWood Finish Varnish",
-        "price": 432
-      }
-    ]
-  },
-  {
-    "quoteId": "Q58700",
-    "createdDate": "2025-02-07",
-    "totalPrice": 1,
-    "items": [
-      {
-        "id": "item1738925664974",
+        "id": "item1738954197242",
         "name": "test",
         "description": "test",
-        "price": 1
+        "price": 100
       }
     ]
   }
