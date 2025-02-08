@@ -46,11 +46,11 @@ export default function Dashboard() {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+        <CardHeader className="block md:flex text-center flex-row items-center justify-between">
           <CardTitle>Quote Management</CardTitle>
           <Button
             onClick={() => router.push("/quotes/new")}
-            className="bg-gradient-to-r from-orange-500 to-orange-600"
+            className="bg-gradient-to-r from-orange-500 to-orange-600 w-full mt-5 md:mt-0 md:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" /> Create New Quote
           </Button>
